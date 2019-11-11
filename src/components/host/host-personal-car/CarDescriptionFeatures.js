@@ -3,6 +3,7 @@ import {
   Card,
   Button,
   ButtonToolbar,
+  FormCheck,
   FormControl,
   FormGroup,
   FormLabel,
@@ -10,76 +11,75 @@ import {
   Col
 } from "react-bootstrap";
 
-export class CarRegistration extends Component {
+export class CarDescriptionFeatures extends Component {
   handlePrev(e) {
     e.preventDefault();
     this.props.handlePrev();
   }
   handleNext(e) {
     e.preventDefault();
-
-    const { values, handleCarRegistrationSave } = this.props;
-    const carRegistration = {
-      plateNumber: values.plateNumber,
-      plateStateOrProvince: values.plateStateOrProvince
+    const { values, handleCarDesFtrnSave } = this.props;
+    let ftrs = [];
+    Object.keys(values.features).forEach(function(feature) {
+      if (values.features[feature][0]) {
+        ftrs.push(values.features[feature][1]);
+      }
+    });
+    const carDesFtr = {
+      description: values.description,
+      features: ftrs
     };
-    handleCarRegistrationSave(carRegistration, "nextStep");
+    handleCarDesFtrnSave(carDesFtr, "nextStep");
   }
   render() {
     const {
       values,
       handleChange,
       formControlStyle,
-      selectStateOptions,
       continueButtonStyle,
-      backButtonStyle
+      backButtonStyle,
+      handleFeatureCheckBox
     } = this.props;
+    let features = [];
+    Object.keys(values.features).forEach(function(feature) {
+      features.push(
+        <FormGroup key={feature}>
+          <FormCheck
+            checked={values.features[feature][0]}
+            label={values.features[feature][1]}
+            name={feature}
+            id={feature}
+            onChange={handleFeatureCheckBox}
+            size="lg"
+          />
+        </FormGroup>
+      );
+    });
 
     return (
       <Card className="hosting-card" style={{ backgroundColor: "black" }}>
-        <Card.Header as="h3">Car registration</Card.Header>
+        <Card.Header as="h3">Car features</Card.Header>
         <Card.Body>
           <Row>
             <FormGroup as={Col}>
               <FormLabel
-                style={values.errors.plateNumber ? { color: "#cc0000" } : null}
+                style={values.errors.description ? { color: "#cc0000" } : null}
               >
-                License plate number
+                Car description
               </FormLabel>
               <FormControl
-                name="plateNumber"
+                as="textarea"
+                name="description"
                 type="text"
-                placeholder="Plate number"
+                placeholder="Tell your guests why your car is their best option."
                 onChange={handleChange}
                 style={formControlStyle}
-                defaultValue={values.plateNumber}
+                defaultValue={values.description}
                 size="lg"
               />
             </FormGroup>
           </Row>
-          <Row>
-            <FormGroup as={Col} md="6">
-              <FormLabel
-                style={
-                  values.errors.plateStateOrProvince
-                    ? { color: "#cc0000" }
-                    : null
-                }
-              >
-                State / province
-              </FormLabel>
-              <FormControl
-                as="select"
-                name="plateStateOrProvince"
-                style={formControlStyle}
-                onChange={handleChange}
-                defaultValue={values.plateStateOrProvince}
-                size="lg"
-              >
-                {selectStateOptions}
-              </FormControl>
-            </FormGroup>
-          </Row>
+          {features}
         </Card.Body>
         <Card.Footer>
           <ButtonToolbar>
@@ -104,4 +104,4 @@ export class CarRegistration extends Component {
   }
 }
 
-export default CarRegistration;
+export default CarDescriptionFeatures;

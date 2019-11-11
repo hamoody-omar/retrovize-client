@@ -1,13 +1,14 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
 import {
   Card,
   Button,
   ButtonToolbar,
-  InputGroup,
+  FormGroup,
   FormControl,
-  FormCheck
+  FormCheck,
+  FormLabel,
+  Row,
+  Col
 } from "react-bootstrap";
 
 export class CarDetails extends Component {
@@ -17,151 +18,210 @@ export class CarDetails extends Component {
   }
   handleNext(e) {
     e.preventDefault();
-    this.props.handleNext();
+    const { values, handleCarSpecificationSave } = this.props;
+    const carSpecification = {
+      specification: values.host.carSpecification,
+      odometer: values.odometer,
+      transmission: values.transmission,
+      isClean: values.isClean
+    };
+    handleCarSpecificationSave(carSpecification, "nextStep");
   }
+
+  handleValidateVIN(e) {
+    e.preventDefault();
+    this.props.handleGetCarSpecification();
+  }
+
+  handleModifyVIN(e) {
+    e.preventDefault();
+    this.props.handleModifyVIN();
+  }
+
   render() {
-    const { values, handleChange } = this.props;
+    const {
+      values,
+      handleChange,
+      formControlStyle,
+      backButtonStyle,
+      continueButtonStyle,
+      buttonStyle,
+      handleCheckBoxChange,
+      handleTransmissionRadioButtonChange
+    } = this.props;
 
-    const yearOptions = [
-      1990,
-      1991,
-      1992,
-      1993,
-      1994,
-      1995,
-      1996,
-      1997,
-      1998,
-      1999,
-      2000,
-      2001,
-      2002,
-      2003,
-      2004,
-      2005,
-      2006,
-      2007,
-      2008,
-      2009,
-      2010,
-      2011,
-      2012,
-      2013,
-      2014,
-      2015,
-      2016,
-      2017,
-      2918,
-      2019,
-      2020
+    const odometerOptions = [
+      "Odometer",
+      "0-50K miles",
+      "50K-100K miles",
+      "100K-150K miles",
+      "150K+ miles"
     ];
-    const selectYearOptions = yearOptions.map(option => (
-      <option key={`year-${option}`} value={option}>
-        {option}
-      </option>
-    ));
+    const selectOdometerOptions = odometerOptions.map(option => {
+      return option === "Odometer" ? (
+        <option key={`odometer-${option}`} value="" selected disabled>
+          {option}
+        </option>
+      ) : (
+        <option key={`odometer-${option}`} value={option}>
+          {option}
+        </option>
+      );
+    });
 
-    const VINlicenseNumberStyle = {
-      backgroundColor: "black",
-      color: "white",
-      border: "1px solid white",
-      minWidth: "53%",
-      marginBottom: "7px"
-    };
-    const issuingDayStyle = {
-      backgroundColor: "black",
-      color: "white",
-      border: "1px solid white",
-      maxWidth: "20%",
-      minWidth: "20%",
-      marginBottom: "7px"
-    };
+    let specification;
+    if (values.host.carSpecification)
+      specification = (
+        <div
+          style={{
+            marginTop: "20px",
+            marginBottom: "15px",
+            whiteSpace: "pre-wrap"
+          }}
+        >
+          <Row as={Col}>
+            {values.host.carSpecification.make}
+            {"  "}
+            {values.host.carSpecification.model}
+            {"  "}
+            {values.host.carSpecification.year}
+          </Row>
+          <Row as={Col} style={{ marginTop: "15px" }}>
+            {values.host.carSpecification.style}
+            {"  "}
+            {values.host.carSpecification.standard_seating} seats
+            {"  "}
+            {values.host.carSpecification.trim_level}
+          </Row>
+        </div>
+      );
+
+    const transmissionColor = values.errors.transmission ? "#cc0000" : null;
 
     return (
       <Card className="hosting-card" style={{ backgroundColor: "black" }}>
         <Card.Header as="h3">Car details</Card.Header>
         <Card.Body>
-          <label>VIN</label>
-          <InputGroup>
-            <FormControl
-              name="VIN"
-              type="text"
-              placeholder="VIN"
-              onChange={handleChange}
-              style={VINlicenseNumberStyle}
-              defaultValue={values.VIN}
+          <Row>
+            <FormGroup as={Col}>
+              <FormLabel>VIN</FormLabel>
+              <FormControl
+                disabled={values.modifyingVIN}
+                name="VIN"
+                type="text"
+                placeholder="VIN"
+                onChange={handleChange}
+                style={formControlStyle}
+                defaultValue={values.VIN}
+                size="lg"
+              />
+              {values.errors.VIN && (
+                <p style={{ color: "#cc0000" }}>{values.errors.VIN}</p>
+              )}
+            </FormGroup>
+          </Row>
+          <ButtonToolbar>
+            <Button
+              style={buttonStyle}
               size="lg"
-            />
-          </InputGroup>
-          <label>Make and model</label>
-          <InputGroup>
-            <FormControl
-              as="select"
-              name="make"
-              onChange={handleChange}
-              style={this.props.formControlStyle}
-              defaultValue={values.make}
-              size="lg"
-            ></FormControl>
-            <FormControl
-              as="select"
-              name="modal"
-              onChange={handleChange}
-              style={this.props.formControlStyle2}
-              defaultValue={values.modal}
-              size="lg"
-            ></FormControl>
-            <FormControl
-              as="select"
-              name="year"
-              onChange={handleChange}
-              style={this.props.formControlStyle2}
-              defaultValue={values.year}
-              size="lg"
+              onClick={
+                values.modifyingVIN
+                  ? this.handleModifyVIN.bind(this)
+                  : this.handleValidateVIN.bind(this)
+              }
+              block
             >
-              {selectYearOptions}
-            </FormControl>
-          </InputGroup>
-          <label style={{ marginTop: "7px", marginBottom: "7px" }}>
-            Transmission
-          </label>
-          <InputGroup>
-            <FormCheck
-              type="radio"
-              label="Automatic"
-              name="automatic"
-              id="automatic"
-              size="lg"
-            />
-            <FormCheck
-              type="radio"
-              label="Manual"
-              name="manual"
-              style={{ marginLeft: "30px" }}
-              id="manual"
-              size="lg"
-            />
-            <FormCheck
+              {values.modifyingVIN ? "Modify VIN" : "Validate"}
+            </Button>
+          </ButtonToolbar>
+          {values.host.carSpecification ? (
+            <div>
+              {specification}
+              <Row>
+                <FormGroup as={Col}>
+                  <FormLabel
+                    style={values.errors.odometer ? { color: "#cc0000" } : null}
+                  >
+                    Odometer
+                  </FormLabel>
+                  <FormControl
+                    as="select"
+                    name="odometer"
+                    onChange={handleChange}
+                    defaultValue={values.odometer}
+                    style={formControlStyle}
+                    size="lg"
+                  >
+                    {selectOdometerOptions}
+                  </FormControl>
+                </FormGroup>
+              </Row>
+              <FormLabel
+                style={{
+                  marginTop: "7px",
+                  marginBottom: "7px",
+                  color: transmissionColor
+                }}
+              >
+                Transmission
+              </FormLabel>
+              <Row>
+                <FormGroup as={Col} md="4">
+                  <FormCheck
+                    type="radio"
+                    label="Automatic"
+                    name="automatic"
+                    id="automatic"
+                    size="lg"
+                    checked={values.transmission === "Automatic"}
+                    onChange={handleTransmissionRadioButtonChange}
+                  />
+                </FormGroup>
+                <FormGroup as={Col}>
+                  <FormCheck
+                    type="radio"
+                    label="Manual"
+                    name="manual"
+                    id="manual"
+                    size="lg"
+                    checked={values.transmission === "Manual"}
+                    onChange={handleTransmissionRadioButtonChange}
+                  />
+                </FormGroup>
+                {/*<FormCheck
               type="radio"
               label="Both"
               name="both"
               style={{ marginLeft: "30px" }}
               id="both"
               size="lg"
-            />
-          </InputGroup>
+           /> */}
+              </Row>
+              <FormGroup style={{ marginTop: "14px", marginBottom: "7px" }}>
+                <FormCheck
+                  checked={values.isClean}
+                  label="My car does not have a salvage or rebuilt title."
+                  name="isClean"
+                  id="isClean"
+                  onChange={handleCheckBoxChange}
+                  size="lg"
+                />
+              </FormGroup>
+            </div>
+          ) : null}
         </Card.Body>
         <Card.Footer>
           <ButtonToolbar>
             <Button
-              style={this.props.backButtonStyle}
+              style={backButtonStyle}
               size="lg"
               onClick={this.handlePrev.bind(this)}
             >
               Back
             </Button>
             <Button
-              style={this.props.continueButtonStyle}
+              disabled={!values.host.carSpecification}
+              style={continueButtonStyle}
               size="lg"
               onClick={this.handleNext.bind(this)}
             >

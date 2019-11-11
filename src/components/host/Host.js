@@ -4,10 +4,6 @@ import PropTypes from "prop-types";
 import { Card, Button, ButtonToolbar } from "react-bootstrap";
 
 class Host extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const buttonStyle = {
       backgroundColor: "black",

@@ -158,7 +158,10 @@ class NavigationBar extends Component {
           {isAuthenticated ? null : guestNav}
         </Navbar>
 
-        <Navbar className="bar bottom-nav-bar" fixed="bottom">
+        <Navbar
+          className="bar bottom-nav-bar justify-content-md-center"
+          fixed="bottom"
+        >
           {isAuthenticated ? authNav : null}
         </Navbar>
       </React.Fragment>

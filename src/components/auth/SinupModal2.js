@@ -121,7 +121,7 @@ class SignupModal2 extends Component {
                   size="lg"
                 />
                 {errors.firstName && (
-                  <p style={{ color: "red" }}>{errors.firstName}</p>
+                  <p style={{ color: "#cc0000" }}>{errors.firstName}</p>
                 )}
               </Form.Group>
               <Form.Group controlId="lastName">
@@ -135,7 +135,7 @@ class SignupModal2 extends Component {
                   size="lg"
                 />
                 {errors.lastName && (
-                  <p style={{ color: "red" }}>{errors.lastName}</p>
+                  <p style={{ color: "#cc0000" }}>{errors.lastName}</p>
                 )}
               </Form.Group>
               <Form.Group controlId="email">
@@ -147,7 +147,9 @@ class SignupModal2 extends Component {
                   style={formControlStyle}
                   size="lg"
                 />
-                {errors.email && <p style={{ color: "red" }}>{errors.email}</p>}
+                {errors.email && (
+                  <p style={{ color: "#cc0000" }}>{errors.email}</p>
+                )}
               </Form.Group>
               <Form.Group controlId="password">
                 <Form.Control
@@ -159,7 +161,7 @@ class SignupModal2 extends Component {
                   size="lg"
                 />
                 {errors.password && (
-                  <p style={{ color: "red", whiteSpace: "pre-wrap" }}>
+                  <p style={{ color: "#cc0000", whiteSpace: "pre-wrap" }}>
                     {errors.password}
                   </p>
                 )}
@@ -173,7 +175,9 @@ class SignupModal2 extends Component {
                   style={checkBoxStyle}
                   size="lg"
                 />
-                {errors.terms && <p style={{ color: "red" }}>{errors.terms}</p>}
+                {errors.terms && (
+                  <p style={{ color: "#cc0000" }}>{errors.terms}</p>
+                )}
               </Form.Group>
               <Form.Group controlId="5">
                 <Form.Check

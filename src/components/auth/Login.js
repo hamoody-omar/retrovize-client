@@ -117,7 +117,7 @@ class Login extends Component {
               style={formControlStyle}
               size="lg"
             />
-            {errors.email && <p style={{ color: "red" }}>{errors.email}</p>}
+            {errors.email && <p style={{ color: "#cc0000" }}>{errors.email}</p>}
           </Form.Group>
           <Form.Group controlId="2">
             <Form.Control
@@ -129,7 +129,7 @@ class Login extends Component {
               size="lg"
             />
             {errors.password && (
-              <p style={{ color: "red" }}>{errors.password}</p>
+              <p style={{ color: "#cc0000" }}>{errors.password}</p>
             )}
           </Form.Group>
           <Button type="submit" style={loginButton} size="lg" block>
