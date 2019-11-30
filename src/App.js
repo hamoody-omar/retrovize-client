@@ -14,6 +14,8 @@ import jwt_decode from "jwt-decode";
 import { setCurrentUser, logoutUser } from "./actions/authActions";
 import Host from "./components/host/Host";
 import HostPersonal from "./components/host/host-personal-car/HostPersonal";
+import AccountSettings from "./components/account/AccountSettings";
+import ViewListings from "./components/listings/ViewListings";
 
 /*import "./App.css";
 
@@ -92,6 +94,20 @@ class App extends Component {
                   exact
                   path="/host-personal-car"
                   component={HostPersonal}
+                />
+              </Switch>
+              <Switch>
+                <PrivateRoute
+                  exact
+                  path="/account-settings"
+                  component={AccountSettings}
+                />
+              </Switch>
+              <Switch>
+                <PrivateRoute
+                  exact
+                  path="/view-listings"
+                  component={ViewListings}
                 />
               </Switch>
             </React.Fragment>

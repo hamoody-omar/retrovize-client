@@ -20,6 +20,8 @@ export class CarRegistration extends Component {
 
     const { values, handleCarRegistrationSave } = this.props;
     const carRegistration = {
+      user: values.user,
+      ID: values.ID,
       plateNumber: values.plateNumber,
       plateStateOrProvince: values.plateStateOrProvince
     };

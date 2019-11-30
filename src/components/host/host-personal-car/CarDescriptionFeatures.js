@@ -26,6 +26,8 @@ export class CarDescriptionFeatures extends Component {
       }
     });
     const carDesFtr = {
+      ID: values.ID,
+      user: values.user,
       description: values.description,
       features: ftrs
     };

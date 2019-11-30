@@ -20,6 +20,7 @@ export class DrivingLicense extends Component {
     e.preventDefault();
     const { values, handleDrivingLicenseSave } = this.props;
     const drivingLicense = {
+      user: values.user,
       firstName: values.firstName,
       middleName: values.middleName,
       lastName: values.lastName,

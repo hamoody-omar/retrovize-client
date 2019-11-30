@@ -3,6 +3,17 @@ import { Card, Button, Form, Col } from "react-bootstrap";
 import DateTimePicker from "../utils/DateTimePicker";
 
 class Home extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      date: null,
+      startDate: null,
+      focusedInput: null,
+      endDate: null,
+      focused: null
+    };
+  }
+
   handleSubmit(e) {
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
@@ -16,7 +27,9 @@ class Home extends Component {
     const searchButton = {
       backgroundColor: "black",
       color: "white",
-      border: "1px solid white"
+      border: "1px solid white",
+      right: "35px"
+      //position: "absolut2"
     };
     const formControlStyle = {
       backgroundColor: "black",
@@ -68,7 +81,15 @@ class Home extends Component {
             </div>
           </section>
                     </div>*/}
-        <Card className="home-search-card" style={{ backgroundColor: "black" }}>
+        <Card
+          className="home-search-card"
+          style={{
+            border: "1px solid white",
+            backgroundColor: "black",
+            color: "white",
+            borderRadius: "5px"
+          }}
+        >
           <Card.Header as="h3" className="text-center">
             Start your reservation.
           </Card.Header>
@@ -80,7 +101,7 @@ class Home extends Component {
             >
               <Form.Row>
                 <Form.Group as={Col} md="12" controlId="where">
-                  <Form.Label>WHERE</Form.Label>
+                  <Form.Label>Where</Form.Label>
                   <Form.Control
                     type="text"
                     placeholder='Try "Raleigh"'
@@ -88,21 +109,19 @@ class Home extends Component {
                     style={formControlStyle}
                     required
                   />
-                  <Form.Control.Feedback type="invalid">
-                    Please provide a valid state.
-                  </Form.Control.Feedback>
                 </Form.Group>
               </Form.Row>
               <Form.Row>
                 <Form.Group as={Col} md="6" controlId="pickup">
-                  <Form.Label>PICKUP</Form.Label>
+                  <Form.Label>Pickup</Form.Label>
                   <DateTimePicker />
                 </Form.Group>
                 <Form.Group as={Col} md="6" controlId="return">
-                  <Form.Label>RETURN</Form.Label>
+                  <Form.Label>Return</Form.Label>
                   <DateTimePicker />
                 </Form.Group>
               </Form.Row>
+
               <Button type="submit" size="lg" style={searchButton}>
                 Search
               </Button>

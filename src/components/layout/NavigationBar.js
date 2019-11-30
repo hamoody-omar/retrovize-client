@@ -14,6 +14,7 @@ import {
   setCloseSignupModal1,
   setCloseSignupModal2
 } from "../../actions/modalActions";
+import { Favorite, Sms, Person, LocalTaxi, Search } from "@material-ui/icons";
 
 class NavigationBar extends Component {
   constructor(props) {
@@ -62,50 +63,56 @@ class NavigationBar extends Component {
     this.props.logoutUser();
   }
   render() {
-    const navLinkStyle = {
+    const navLinkStyle0 = {
       backgroundColor: "black",
-      //marginLeft: "4px",
+      marginLeft: "7px",
       color: "white"
     };
-    const { isAuthenticated, user } = this.props.auth;
+    const navLinkStyle = {
+      backgroundColor: "black",
+      marginLeft: "20px",
+      color: "white"
+    };
+    const { isAuthenticated } = this.props.auth;
 
     const authNav = (
-      <Navbar.Collapse className="pull-right" id="guestNav">
-        <Nav>
-          <Nav.Item>
-            <Nav.Link href="/host-car" style={navLinkStyle}>
-              Host a car
+      <Navbar.Collapse id="authtNav" className="_114hotj">
+        <Nav className="_h0klba">
+          <Nav.Item className="_fkdhqt">
+            <Nav.Link href="/">
+              <div className="_9ox9qdx">
+                <Search fontSize="large" />
+              </div>
             </Nav.Link>
           </Nav.Item>
-          <Nav.Item>
-            <Nav.Link href="/saved" style={navLinkStyle}>
-              Saved
+          <Nav.Item className="_fkdhqt">
+            <Nav.Link href="#">
+              <div className="_9ox9qdx">
+                <Favorite fontSize="large" />
+              </div>
             </Nav.Link>
           </Nav.Item>
-          <Nav.Item>
-            <Nav.Link href="/inbox" style={navLinkStyle}>
-              Inbox
+          <Nav.Item className="_fkdhqt">
+            <Nav.Link href="#">
+              <div className="_9ox9qdx">
+                <LocalTaxi fontSize="large" />
+              </div>
             </Nav.Link>
           </Nav.Item>
-          <Nav.Item>
-            <Nav.Link href="/help" style={navLinkStyle}>
-              Help
+          <Nav.Item className="_fkdhqt">
+            <Nav.Link href="#">
+              <div className="_9ox9qdx">
+                <Sms fontSize="large" />
+              </div>
             </Nav.Link>
           </Nav.Item>
-          <Nav.Item>
-            <Nav.Link
-              style={navLinkStyle}
-              onClick={this.handleLogout.bind(this)}
-            >
-              Log out
+          <Nav.Item className="_fkdhqt">
+            <Nav.Link href="/account-settings">
+              <div className="_9ox9qdx">
+                <Person fontSize="large" />
+              </div>
             </Nav.Link>
           </Nav.Item>
-          <img
-            className="rounded-circle"
-            //src={}
-            alt={user.lastName}
-            style={{ width: "25px", marginLeft: "25px" }}
-          />
         </Nav>
       </Navbar.Collapse>
     );
@@ -149,8 +156,8 @@ class NavigationBar extends Component {
             <img
               alt="Retrovize Logo"
               src={require("../../logo/retrovize_logo.JPG")}
-              width="45"
-              height="30"
+              width="40"
+              height="28"
               className="d-inline-block align-top"
             />
           </Navbar.Brand>
@@ -158,12 +165,7 @@ class NavigationBar extends Component {
           {isAuthenticated ? null : guestNav}
         </Navbar>
 
-        <Navbar
-          className="bar bottom-nav-bar justify-content-md-center"
-          fixed="bottom"
-        >
-          {isAuthenticated ? authNav : null}
-        </Navbar>
+        <Navbar>{isAuthenticated ? authNav : null}</Navbar>
       </React.Fragment>
     );
   }

@@ -20,6 +20,8 @@ export class CarDetails extends Component {
     e.preventDefault();
     const { values, handleCarSpecificationSave } = this.props;
     const carSpecification = {
+      user: values.user,
+      ID: values.ID,
       specification: values.host.carSpecification,
       odometer: values.odometer,
       transmission: values.transmission,

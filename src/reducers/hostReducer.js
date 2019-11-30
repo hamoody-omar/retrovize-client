@@ -8,7 +8,7 @@ import {
 
 const initialState = {
   carSpecification: null,
-  step: 6
+  step: 8
 };
 
 export default function(state = initialState, action) {

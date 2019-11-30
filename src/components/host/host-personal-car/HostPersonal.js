@@ -8,13 +8,18 @@ import CarRegistration from "./CarRegistration";
 import CarLocation from "./CarLocation";
 import CarDescriptionFeatures from "./CarDescriptionFeatures";
 import CarAvailabilityPrice from "./CarAvailabilityPrice";
+import CarPhotos from "./CarPhotos";
+import ReviewPublish from "./ReviewPublish";
 import { saveDrivingLicense } from "../../../actions/profileActions";
 import {
   saveCarSpecification,
   getCarSpecification,
   saveCarRegistration,
   saveCarLocation,
-  saveCarDesFtr
+  saveCarDesFtr,
+  savePriceAvailability,
+  uploadCarPhoto,
+  publishCar
 } from "../../../actions/hostActions";
 import {
   clearError,
@@ -28,6 +33,12 @@ export class HostPersonal extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      ID:
+        this.props.auth.user.firstName +
+        Math.random()
+          .toString(36)
+          .substr(2, 9) +
+        Date.now(),
       step: this.props.host.step,
       VIN: "",
       make: "",
@@ -73,6 +84,7 @@ export class HostPersonal extends Component {
         convertible: [false, "Convertible"],
         sunRoof: [false, "Sun roof"]
       },
+      imagePreviewUrls: [],
       profile: this.props.profile,
       host: this.props.host,
       modifyingVIN: false,
@@ -82,6 +94,7 @@ export class HostPersonal extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.nextStep = this.nextStep.bind(this);
     this.prevStep = this.prevStep.bind(this);
+    this.handleImageUpload = this.handleImageUpload.bind(this);
     this.handleCheckBoxChange = this.handleCheckBoxChange.bind(this);
     this.handleFeatureCheckBox = this.handleFeatureCheckBox.bind(this);
     this.handleDrivingLicenseSave = this.handleDrivingLicenseSave.bind(this);
@@ -96,6 +109,11 @@ export class HostPersonal extends Component {
     this.handleCarRegistrationSave = this.handleCarRegistrationSave.bind(this);
     this.handleCarLocationSave = this.handleCarLocationSave.bind(this);
     this.handleCarDesFtrnSave = this.handleCarDesFtrnSave.bind(this);
+    this.handleCarPriceAvailabitliySave = this.handleCarPriceAvailabitliySave.bind(
+      this
+    );
+    this.handleUploadCarPhoto = this.handleUploadCarPhoto.bind(this);
+    this.handleCarPublish = this.handleCarPublish.bind(this);
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -156,21 +174,54 @@ export class HostPersonal extends Component {
   }
 
   nextStep() {
-    //const { step } = this.state;
-    //this.setState({ step: step + 1 });
     store.dispatch(incrementHostStep());
-    console.log("Errors");
-    console.log(this.state.errors);
-    console.log("profile");
-    console.log(this.state.profile);
-    console.log("host");
-    console.log(this.state.host);
   }
 
   prevStep() {
-    //const { step } = this.state;
-    ///this.setState({ step: step - 1 });
     store.dispatch(decrementHostStep());
+  }
+
+  handleImageUpload(e) {
+    e.preventDefault();
+    console.log("come here ");
+    console.log(e);
+
+    const file = e.target.files[0];
+    let imageFormObject = new FormData();
+
+    imageFormObject.append("ID", this.state.ID);
+    imageFormObject.append("userid", this.props.auth.user.id);
+    imageFormObject.append("imageData", file);
+    /*imageFormObject.append(
+      "imageData",
+      new Blob([file], { type: "image/png", name: this.state.ID })
+    );*/
+
+    this.props.uploadCarPhoto(imageFormObject, null);
+    //const { errors } = this.props;
+    //console.log(errors);
+    //if (Object.keys(errors).length === 0) {
+    const UpdateImagePreviewUrls = this.state.imagePreviewUrls;
+    UpdateImagePreviewUrls.push(URL.createObjectURL(file));
+    this.setState({
+      imagePreviewUrls: UpdateImagePreviewUrls
+    });
+    //}
+    /*reader.onloadend = () => {
+      const UpdateImagePreviewUrls = this.state.imagePreviewUrls;
+      //console.log(reader);
+      UpdateImagePreviewUrls.push(reader.result);
+      this.setState({
+        imagePreviewUrls: UpdateImagePreviewUrls
+      });
+    };
+
+    this.props.uploadCarPhoto(e.target.files[0], null);
+    console.log("e file");
+    console.log(e.target.value);
+    //const { errors } = this.props;
+    //if (!errors)
+    reader.readAsDataURL(file);*/
   }
 
   handleDrivingLicenseSave(drivingLicense, next) {
@@ -202,8 +253,21 @@ export class HostPersonal extends Component {
     this.props.saveCarDesFtr(carDesFtr, next);
   }
 
+  handleCarPriceAvailabitliySave(carPriceAvailabitliy, next) {
+    this.props.savePriceAvailability(carPriceAvailabitliy, next);
+  }
+
+  handleUploadCarPhoto(carPhoto, next) {
+    this.props.uploadCarPhoto(carPhoto, next);
+  }
+
+  handleCarPublish(data, history) {
+    this.props.publishCar(data, history);
+  }
+
   render() {
     const {
+      ID,
       step,
       VIN,
       odometer,
@@ -237,12 +301,14 @@ export class HostPersonal extends Component {
       minimumTrip,
       maximumTrip,
       dailyPrice,
+      imagePreviewUrls,
       host,
       modifyingVIN,
       errors
     } = this.state;
 
     const drivingLicenseValues = {
+      user: this.props.auth.user,
       firstName,
       middleName,
       lastName,
@@ -257,6 +323,8 @@ export class HostPersonal extends Component {
       errors
     };
     const carDetailValues = {
+      user: this.props.auth.user,
+      ID,
       VIN,
       host,
       modifyingVIN,
@@ -266,16 +334,22 @@ export class HostPersonal extends Component {
       errors
     };
     const carRegistrationValues = {
+      user: this.props.auth.user,
+      ID,
       plateNumber,
       plateStateOrProvince,
       errors
     };
     const carDescriptionFeatures = {
+      user: this.props.auth.user,
+      ID,
       description,
       features,
       errors
     };
     const carLocationValues = {
+      user: this.props.auth.user,
+      ID,
       locationCountry,
       locationStreetAddress,
       locationAptSuite,
@@ -285,10 +359,18 @@ export class HostPersonal extends Component {
       errors
     };
     const carAvailabilityPrice = {
+      user: this.props.auth.user,
+      ID,
       advanceNotice,
       minimumTrip,
       maximumTrip,
       dailyPrice,
+      errors
+    };
+    const carPhotos = {
+      user: this.props.auth.user,
+      ID,
+      imagePreviewUrls,
       errors
     };
     const buttonStyle = {
@@ -464,10 +546,10 @@ export class HostPersonal extends Component {
             handlePrev={this.prevStep}
             handleNext={this.nextStep}
             handleCarDesFtrnSave={this.handleCarDesFtrnSave}
+            handleFeatureCheckBox={this.handleFeatureCheckBox}
             backButtonStyle={backButtonStyle}
             continueButtonStyle={continueButtonStyle}
             formControlStyle={formControlStyle}
-            handleFeatureCheckBox={this.handleFeatureCheckBox}
           />
         );
       }
@@ -478,9 +560,33 @@ export class HostPersonal extends Component {
             handleChange={this.handleChange}
             handlePrev={this.prevStep}
             handleNext={this.nextStep}
+            handleCarPriceAvailabitliySave={this.handleCarPriceAvailabitliySave}
             backButtonStyle={backButtonStyle}
             continueButtonStyle={continueButtonStyle}
             formControlStyle={formControlStyle}
+          />
+        );
+      }
+      case 7: {
+        return (
+          <CarPhotos
+            values={carPhotos}
+            handlePrev={this.prevStep}
+            handleImageUpload={this.handleImageUpload}
+            handleNext={this.handleNext}
+            backButtonStyle={backButtonStyle}
+            continueButtonStyle={continueButtonStyle}
+            formControlStyle={formControlStyle}
+          />
+        );
+      }
+      case 8: {
+        return (
+          <ReviewPublish
+            backButtonStyle={backButtonStyle}
+            continueButtonStyle={continueButtonStyle}
+            formControlStyle={formControlStyle}
+            handleCarPublish={this.handleCarPublish}
           />
         );
       }
@@ -493,7 +599,6 @@ HostPersonal.propTypes = {
   saveDrivingLicense: PropTypes.func.isRequired,
   getCarSpecification: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  profile: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   host: PropTypes.object.isRequired
 };
@@ -501,7 +606,6 @@ HostPersonal.propTypes = {
 const mapStateToProps = state => ({
   auth: state.auth,
   errors: state.errors,
-  profile: state.profile,
   host: state.host,
   step: state.host.step
 });
@@ -513,6 +617,9 @@ export default connect(
     getCarSpecification,
     saveCarRegistration,
     saveCarLocation,
-    saveCarDesFtr
+    saveCarDesFtr,
+    savePriceAvailability,
+    uploadCarPhoto,
+    publishCar
   }
 )(withRouter(HostPersonal));

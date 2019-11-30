@@ -18,7 +18,16 @@ export class CarAvailabilityPrice extends Component {
   }
   handleNext(e) {
     e.preventDefault();
-    this.props.handleNext();
+    const { values, handleCarPriceAvailabitliySave } = this.props;
+    const carPriceAvailability = {
+      ID: values.ID,
+      user: values.user,
+      dailyPrice: values.dailyPrice,
+      advanceNotice: values.advanceNotice,
+      minimumTrip: values.minimumTrip,
+      maximumTrip: values.maximumTrip
+    };
+    handleCarPriceAvailabitliySave(carPriceAvailability, "nextStep");
   }
   render() {
     const {
@@ -94,7 +103,9 @@ export class CarAvailabilityPrice extends Component {
       <Card className="hosting-card" style={{ backgroundColor: "black" }}>
         <Card.Header as="h3">Car price and availability</Card.Header>
         <Card.Body>
-          <label>Daily price</label>
+          <label style={values.errors.dailyPrice ? { color: "#cc0000" } : null}>
+            Daily price
+          </label>
           <Row style={{ marginBottom: "15px" }}>
             <InputGroup as={Col}>
               <InputGroup.Prepend>
@@ -103,6 +114,7 @@ export class CarAvailabilityPrice extends Component {
 
               <FormControl
                 name="dailyPrice"
+                type="number"
                 onChange={handleChange}
                 style={formControlStyle}
                 defaultValue={values.dailyPrice}
@@ -117,7 +129,13 @@ export class CarAvailabilityPrice extends Component {
           </Row>
           <Row>
             <FormGroup as={Col}>
-              <FormLabel>Advance notice</FormLabel>
+              <FormLabel
+                style={
+                  values.errors.advanceNotice ? { color: "#cc0000" } : null
+                }
+              >
+                Advance notice
+              </FormLabel>
               <FormControl
                 as="select"
                 name="advanceNotice"
@@ -132,7 +150,11 @@ export class CarAvailabilityPrice extends Component {
           </Row>
           <Row>
             <FormGroup as={Col}>
-              <FormLabel>Minimum trip</FormLabel>
+              <FormLabel
+                style={values.errors.minimumTrip ? { color: "#cc0000" } : null}
+              >
+                Minimum trip
+              </FormLabel>
               <FormControl
                 as="select"
                 name="minimumTrip"
@@ -147,7 +169,11 @@ export class CarAvailabilityPrice extends Component {
           </Row>
           <Row>
             <FormGroup as={Col}>
-              <FormLabel>Maximum trip</FormLabel>
+              <FormLabel
+                style={values.errors.maximumTrip ? { color: "#cc0000" } : null}
+              >
+                Maximum trip
+              </FormLabel>
               <FormControl
                 as="select"
                 name="maximumTrip"

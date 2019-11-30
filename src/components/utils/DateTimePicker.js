@@ -9,6 +9,7 @@ import {
 } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core";
+import { Row, Col } from "react-bootstrap";
 
 const styles = theme => ({
   input: {
@@ -52,7 +53,13 @@ const MaterialUIPickers = ({ classes, ...rest }) => {
             KeyboardButtonProps={{
               "aria-label": "change date"
             }}
-            //style={{ backgroundColor: "black", color: "white" }}
+            style={{
+              //backgroundColor: "black",
+              // color: "white",
+              maxWidth: "140px"
+              //left: "4px",
+              //position: "absolute"
+            }}
             InputProps={{ className: classes.input }}
           />
           <KeyboardTimePicker
@@ -63,6 +70,11 @@ const MaterialUIPickers = ({ classes, ...rest }) => {
             onChange={handleDateChange}
             KeyboardButtonProps={{
               "aria-label": "change time"
+            }}
+            style={{
+              backgroundColor: "black",
+              color: "white",
+              maxWidth: "130px"
             }}
             InputProps={{ className: classes.input }}
           />

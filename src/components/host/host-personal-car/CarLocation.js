@@ -21,6 +21,8 @@ export class CarLocation extends Component {
     const { values, handleCarLocationSave } = this.props;
 
     const carLocation = {
+      ID: values.ID,
+      user: values.user,
       locationCity: values.locationCity,
       locationStateOrProvince: values.locationStateOrProvince,
       locationStreetAddress: values.locationStreetAddress,
